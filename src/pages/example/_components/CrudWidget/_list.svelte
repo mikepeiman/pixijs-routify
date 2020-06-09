@@ -1,6 +1,11 @@
 <script>
   import { url } from "@sveltech/routify";
   export let data;
+  // data.then(promised => {
+  //   console.log(`in _list.svelte promised: ${promised}`)
+  // })
+
+  console.log(`type of data ${typeof data}`)
 </script>
 
 <style>

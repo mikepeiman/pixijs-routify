@@ -1,11 +1,28 @@
 <script>
   import { url } from "@sveltech/routify";
+  import axios from "axios";
   export let data;
-  // data.then(promised => {
-  //   console.log(`in _list.svelte promised: ${promised}`)
-  // })
 
-  console.log(`type of data ${typeof data}`)
+  let projectList = [];
+
+  data.then(res => {
+    let data = res.data;
+    data.forEach(item => {
+      let newObj = {};
+      // console.log(`<<<<<<<<<<<<<<<< ${item.name} >>>>>>>>>>>>>>>>>`);
+      for (let [key, val] of Object.entries(item)) {
+        newObj[key] = val;
+      }
+      projectList = [...projectList, newObj];
+    });
+    console.log(
+      `#################################################################### _list.svelte: `,
+      projectList
+    );
+    return projectList;
+  });
+
+  console.log(`type of data ${typeof data}, projectList ${typeof projectList}`);
 </script>
 
 <style>
@@ -17,14 +34,18 @@
 </style>
 
 <div class="items">
-  {#each data as item}
+  <!-- {#await projectList} -->
+  {#each projectList as item}
     <a href={$url('../:id', { id: item.id })} class="item">
-      {#each Object.entries(item).slice(0, 3) as [name, value]}
-        <div>
-          <b>{name}:</b>
-          {value}
-        </div>
+      {#each Object.entries(item) as [name, value]}
+        {#if name === 'name' || name === 'id'}
+          <div>
+            <b>{name}:</b>
+            {value}
+          </div>
+        {/if}
       {/each}
     </a>
   {/each}
+  <!-- {/await} -->
 </div>

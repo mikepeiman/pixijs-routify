@@ -1,12 +1,11 @@
 import axios from "axios";
 
-let authUrl = "https://todoist.com/oauth/authorize";
-let clientId = "?client_id=b27b589d42044a5ca44bffe94ffb1cfb";
-let scope = "&scope=data:read";
-let clientSecret = "&state=59d52f98e27f41528505670f1a51c9ce";
+// let authUrl = "https://todoist.com/oauth/authorize";
+// let clientId = "?client_id=b27b589d42044a5ca44bffe94ffb1cfb";
+// let scope = "&scope=data:read";
+// let clientSecret = "&state=59d52f98e27f41528505670f1a51c9ce";
 let authToken = "7031e994e56e51471f68692df9504e981c35c54a";
 let todoistREST = "https://api.todoist.com/rest/v1/projects";
-let todoistSYNC = "https://api.todoist.com/sync/v8/sync";
 
 let pid, projectList
 
@@ -67,9 +66,10 @@ function getProjects() {
 });
 }
 
-let p = getProjects()
-export const projects = p
 
+export const projects = todoistProjects
+// console.log(`type of projects from _data ${typeof projects}`)
+// console.log(`type of todoistProjects from _data ${typeof todoistProjects}`)
 export const todos = [
   {
     userId: 1,

@@ -25,8 +25,8 @@
       view: canvas,
       width: window.innerWidth,
       height: window.innerHeight
-      resolution: window.devicePixelRatio,
-      autoDensity: true
+      // resolution: window.devicePixelRatio,
+      // autoDensity: true
     });
 
     window.addEventListener("resize", resize);
@@ -38,19 +38,36 @@
     }
 
     const stage = new PIXI.Container();
+    let starsGroup = new PIXI.Container();
+    stage.addChild(starsGroup);
 
     // pixidiv.appendChild(app.view);
     renderer.backgroundColor = 0xe0f0ff;
 
     const fav = PIXI.Texture.from("/favicon.png");
     const star = PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
+    // star.width = 300
+    // star.height = 300
 
-    const starSprite = new PIXI.Sprite(star);
-    starSprite.width = 50;
-    starSprite.height = 50;
-    starSprite.anchor.x = 0.5;
-    starSprite.anchor.y = 0.5;
-    stage.addChild(starSprite);
+    const starSprite1 = new PIXI.Sprite(star);
+    starSprite1.width = 50;
+    starSprite1.height = 50;
+    starSprite1.anchor.x = 0.125;
+    starSprite1.anchor.y = 0.125;
+    starsGroup.addChild(starSprite1);
+    // stage.addChild(starSprite1)
+    const starSprite2 = new PIXI.Sprite(star);
+    starSprite2.width = 35;
+    starSprite2.height = 35;
+    starSprite2.anchor.x = 0.5;
+    starSprite2.anchor.y = 0.5;
+    starsGroup.addChild(starSprite2);
+    const starSprite3 = new PIXI.Sprite(star);
+    starSprite3.width = 65;
+    starSprite3.height = 65;
+    starSprite3.anchor.x = 0.975;
+    starSprite3.anchor.y = 0.975;
+    starsGroup.addChild(starSprite3);
 
     const favSprite = new PIXI.Sprite(fav);
 
@@ -63,13 +80,17 @@
     ticker.start();
 
     function animate() {
-      starSprite.x = renderer.screen.width / 1.2;
-      starSprite.y = renderer.screen.height / 1.2;
+      starsGroup.x = renderer.screen.width / 1.7;
+      starsGroup.y = renderer.screen.height / 1.7;
+
+      // starSprite.x = renderer.screen.width / 1.2;
+      // starSprite.y = renderer.screen.height / 1.2;
 
       favSprite.x = renderer.screen.width / 2.2;
       favSprite.y = renderer.screen.height / 2.2;
 
-      starSprite.rotation += 0.01;
+      starsGroup.rotation += 0.01
+      // starSprite.rotation += 0.01;
       favSprite.rotation -= 0.01;
       renderer.render(stage);
     }

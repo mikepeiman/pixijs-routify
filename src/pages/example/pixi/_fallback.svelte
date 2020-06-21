@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import * as PIXI from "pixi.js";
+  //  using video tutorial at https://www.youtube.com/watch?v=2J0VUiozAVM&list=PL08jItIqOb2oGcyrgREbrm_b9OW7TE1ji&index=3
 
   onMount(() => {
     let type = "WebGL";
@@ -10,80 +11,53 @@
 
     PIXI.utils.sayHello(type);
     let canvas = document.querySelector("#pixi");
-    let app = new PIXI.Application({
+
+    // let app = new PIXI.Application({
+    //   view: canvas,
+    //   width: window.innerWidth,
+    //   height: window.innerHeight
+    // });
+
+    const renderer = new PIXI.Renderer({
       view: canvas,
       width: window.innerWidth,
       height: window.innerHeight
     });
 
-    // pixidiv.appendChild(app.view);
-    app.renderer.backgroundColor = 0xe0f0ff;
-    // app.renderer.view.style.position = "absolute";
-    // app.renderer.view.style.display = "block";
-    // app.renderer.autoResize = true;
-    // app.renderer.resize(window.innerWidth, window.innerHeight);
+    const stage = new PIXI.Container();
 
-    // PIXI.loader.add("images/anyImage.png").load(setup);
+    // pixidiv.appendChild(app.view);
+    renderer.backgroundColor = 0xe0f0ff;
+
     const fav = PIXI.Texture.from("/favicon.png");
-    const star = PIXI.Texture.from(
-      "/Ic_star_outline_24px.svg.png"
-    );
+    const star = PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
 
     const starSprite = new PIXI.Sprite(star);
     starSprite.x = 100; // app.renderer.width / 1.2;
     starSprite.y = 100; // app.renderer.height / 1.2;
+    starSprite.width = 50;
+    starSprite.height = 50;
     starSprite.anchor.x = 0.5;
     starSprite.anchor.y = 0.5;
-    app.stage.addChild(starSprite);
+    stage.addChild(starSprite);
 
     const favSprite = new PIXI.Sprite(fav);
-    favSprite.x = app.renderer.width / 2;
-    favSprite.y = app.renderer.height / 2;
+    favSprite.x = renderer.width / 2;
+    favSprite.y = renderer.height / 2;
     favSprite.anchor.x = 0.5;
     favSprite.anchor.y = 0.5;
-    app.stage.addChild(favSprite);
+    stage.addChild(favSprite);
 
-    app.ticker.add(animate);
+    const ticker = new PIXI.Ticker();
+    ticker.add(animate);
+    ticker.start();
+
     function animate() {
       starSprite.rotation += 0.01;
-      favSprite.rotation += 0.01;
+      favSprite.rotation -= 0.01;
+      renderer.render(stage)
     }
 
-    // app.loader.add("bunny", "./favicon.png").load((loader, resources) => {
-    //   // This creates a texture from a 'bunny.png' image
-    //   const bunny = new PIXI.Sprite(resources.bunny.texture);
-    //   console.log(`inside app.loader.add`);
-
-    //   console.log(bunny);
-    //   // Setup the position of the bunny
-    //   bunny.x = app.renderer.width / 2;
-    //   bunny.y = app.renderer.height / 2;
-
-    //   // Rotate around the center
-    //   bunny.anchor.x = 0.5;
-    //   bunny.anchor.y = 0.5;
-
-    //   bunny.position.x = 200;
-    //   bunny.position.y = 150;
-
-    //   // Add the bunny to the scene we are building
-    //   app.stage.addChild(bunny);
-
-    //   // Listen for frame updates
-    //   app.ticker.add(() => {
-    //     // each frame we spin the bunny around a bit
-    //     bunny.rotation += 0.01;
-    //   });
-    // });
-
-    // function setup() {
-    //   //This code will run when the loader has finished loading the image
-    //   let star = new PIXI.Sprite(
-    //     PIXI.loader.resources["favicon.png"].texture
-    //   );
-    //   // ../../../static/Ic_star_outline_24px.svg
-    //   app.stage.addChild(star);
-    // }
   });
 </script>
 

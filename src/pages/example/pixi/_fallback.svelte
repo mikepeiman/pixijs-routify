@@ -18,11 +18,24 @@
     //   height: window.innerHeight
     // });
 
+    let _w = window.innerWidth;
+    let _h = window.innerHeight;
+
     const renderer = new PIXI.Renderer({
       view: canvas,
       width: window.innerWidth,
       height: window.innerHeight
+      resolution: window.devicePixelRatio,
+      autoDensity: true
     });
+
+    window.addEventListener("resize", resize);
+    function resize() {
+      _w = window.innerWidth;
+      _h = window.innerHeight;
+
+      renderer.resize(_w, _h);
+    }
 
     const stage = new PIXI.Container();
 
@@ -33,8 +46,6 @@
     const star = PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
 
     const starSprite = new PIXI.Sprite(star);
-    starSprite.x = 100; // app.renderer.width / 1.2;
-    starSprite.y = 100; // app.renderer.height / 1.2;
     starSprite.width = 50;
     starSprite.height = 50;
     starSprite.anchor.x = 0.5;
@@ -42,8 +53,7 @@
     stage.addChild(starSprite);
 
     const favSprite = new PIXI.Sprite(fav);
-    favSprite.x = renderer.width / 2;
-    favSprite.y = renderer.height / 2;
+
     favSprite.anchor.x = 0.5;
     favSprite.anchor.y = 0.5;
     stage.addChild(favSprite);
@@ -53,11 +63,16 @@
     ticker.start();
 
     function animate() {
+      starSprite.x = renderer.screen.width / 1.2;
+      starSprite.y = renderer.screen.height / 1.2;
+
+      favSprite.x = renderer.screen.width / 2.2;
+      favSprite.y = renderer.screen.height / 2.2;
+
       starSprite.rotation += 0.01;
       favSprite.rotation -= 0.01;
-      renderer.render(stage)
+      renderer.render(stage);
     }
-
   });
 </script>
 

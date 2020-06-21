@@ -10,7 +10,8 @@
     ["./404", "404"],
     ["./api", "Api"],
     ["./app", "App"],
-    ["./transitions/tabs", "Transitions"]
+    ["./transitions/tabs", "Transitions"],
+    ["./pixi", "PixiJS"]
   ];
 </script>
 

@@ -5,7 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy'
 import del from 'del'
-
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 
 const staticDir = 'static'
@@ -57,6 +57,7 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
       }),
       commonjs(),
+      nodePolyfills(),
 
 
       // If we're building for production (npm run build
@@ -80,8 +81,10 @@ const bundledConfig = {
   },
   plugins: [
     !production && serve(),
-    !production && livereload(distDir)
-  ]
+    !production && livereload(distDir),
+    resolve()
+  ],
+  // external: ['pixi.js']
 }
 
 const dynamicConfig = {
@@ -92,7 +95,9 @@ const dynamicConfig = {
   },
   plugins: [
     !production && livereload(distDir),
-  ]
+    resolve()
+  ],
+  // external: ['pixi.js']
 }
 
 

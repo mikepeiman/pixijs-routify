@@ -19,58 +19,69 @@
     PIXI.utils.sayHello(type);
     console.log(PIXI.utils.TextureCache);
     PIXI.utils.sayHello(PIXI.utils.TextureCache);
-
-    // let loader = new PIXI.Loader();
     let loader = PIXI.Loader.shared;
-    loader.add("fav", "/favicon.png").add("star", "/Ic_star_outline_24px.svg.png");
+    loader
+      .add("fav", "/favicon.png")
+      .add("star", "/Ic_star_outline_24px.svg.png");
 
-    // the following chained methods seem to be deprecated as implied by http://pixijs.download/release/docs/PIXI.Loader.html
-      // loader.on("progress", handleLoadAssetProgress)
-      // .on("error", handleLoadAssetError)
-      // .on("load", handleLoadAsset)
-      // .load(handleLoadAssetComplete);
-
-      // this is the method given by docs http://pixijs.download/release/docs/PIXI.Loader.html
+    // this is the method given by docs http://pixijs.download/release/docs/PIXI.Loader.html
     loader.onLoad.add(handleLoadAsset); // fired every time an individual asset completes loading
     loader.onError.add(handleLoadAssetError); // fired whenever there is an error loading an asset
     loader.onProgress.add(handleLoadAssetProgress); // progress updates on the status of our loader
-    loader.load(handleLoadAssetComplete)
+    loader.load(handleLoadAssetComplete);
     function handleLoadAssetProgress(loader, resource) {
       console.log(loader.progress + "% loaded");
     }
 
     function handleLoadAsset(loader, resource) {
-      console.log("asset loaded" + resource.name);
+      console.log("asset loaded: " + resource.name);
     }
 
     function handleLoadAssetError(loader, resource) {
       console.log("load error");
     }
 
-    let tex1;
-    function handleLoadAssetComplete() {
-      let texture = loader.resources.fav.texture;
-      tex1 = new PIXI.Sprite(texture);
-      tex1.anchor.x = 0.55;
-      tex1.anchor.y = 0.45;
-      app.stage.addChild(tex1);
-      app.ticker.add(animate);
+    let texMask = new PIXI.Graphics();
+    texMask.beginFill(0xff00ff);
+    texMask.drawRect(0, 0, 1000, 1000);
+    texMask.endFill();
 
+    let delta = 0;
+
+    let tex1 = new PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
+    let tex2 = new PIXI.Texture.from("/favicon.png");
+
+    function handleLoadAssetComplete() {
+      let fav = loader.resources.fav.texture;
+      let star = loader.resources.star.texture;
+      let sprite1 = new PIXI.Sprite(fav);
+      let sprite2 = new PIXI.Sprite(star);
+      sprite1.anchor.set(0.5);
+      sprite1.position.set(
+        app.renderer.screen.width / 2,
+        app.renderer.screen.height / 2
+      );
+
+      sprite1.tint = 0xaa00ff;
+      app.stage.addChild(sprite1);
+      app.ticker.add(animate);
+      // replaceTex(1500);
+    }
+
+    function replaceTex(duration) {
       setTimeout(() => {
-        tex1.texture = loader.resources.star.texture
-      }, 2500);
+        delta += 1;
+        sprite1.texture = loader.resources.star.texture;
+        sprite1.scale = new PIXI.Point(0.1, 0.1);
+        sprite1.rotation -= 0.01;
+        sprite1.y = 10 + Math.sin(delta) * 1;
+        sprite1.mask = texMask;
+        app.ticker.add(animate2);
+      }, duration);
     }
 
     let _w = window.innerWidth;
     let _h = window.innerHeight;
-
-    // const app.renderer = new PIXI.Renderer({
-    //   view: canvas,
-    //   width: window.innerWidth,
-    //   height: window.innerHeight
-    //   // resolution: window.devicePixelRatio,
-    //   // autoDensity: true
-    // });
 
     window.addEventListener("resize", resize);
     function resize() {
@@ -79,11 +90,9 @@
       app.renderer.resize(_w, _h);
     }
 
-    // const stage = new PIXI.Container();
     let starsGroup = new PIXI.Container();
     app.stage.addChild(starsGroup);
 
-    // pixidiv.appendChild(app.view);
     app.renderer.backgroundColor = 0xe0f0ff;
 
     let xdot = new PIXI.Graphics();
@@ -93,65 +102,52 @@
     xstar.y = app.renderer.height / 3;
     app.stage.addChild(xstar);
 
-    // const fav = PIXI.Texture.from("/favicon.png");
-    // const star = PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
-    // star.width = 300
-    // star.height = 300
-
-    // const starSprite1 = new PIXI.Sprite(star);
-    // starSprite1.width = 50;
-    // starSprite1.height = 50;
-    // starSprite1.tint = 0xccbbaa;
-    // starSprite1.position.set(0.25, 0.75);
-    // starsGroup.addChild(starSprite1);
-    // const starSprite2 = new PIXI.Sprite(star);
-    // starSprite2.width = 35;
-    // starSprite2.height = 35;
-    // starSprite2.tint = 0xaabbcc;
-    // starSprite2.anchor.x = 0.5;
-    // starSprite2.anchor.y = 0.5;
-    // starsGroup.addChild(starSprite2);
-    // const starSprite3 = new PIXI.Sprite(star);
-    // starSprite3.width = 65;
-    // starSprite3.height = 65;
-    // starSprite3.tint = 0x00ccff;
-    // starSprite3.anchor.x = 0.975;
-    // starSprite3.anchor.y = 0.975;
-    // starsGroup.addChild(starSprite3);
-
-    // const favSprite = new PIXI.Sprite(fav);
-
-    // favSprite.anchor.x = 0.5;
-    // favSprite.anchor.y = 0.5;
-    // app.stage.addChild(favSprite);
-
-    // const ticker = new PIXI.Ticker();
-    // app.ticker.add(animate);
     app.ticker.speed = 0.01;
     app.ticker.start();
 
-    let delta = 0;
+    // let delta = 0;
     function animate() {
-      delta += 1;
+      let fav = loader.resources.fav.texture;
+      let star = loader.resources.star.texture;
+      let sprite1 = new PIXI.Sprite(fav);
+      let sprite2 = new PIXI.Sprite(star);
+      delta += 0.1;
+      sprite1.x = app.renderer.screen.width / 2;
+      sprite1.y = app.renderer.screen.height / 2;
+      sprite1.rotation += 0.01;
+      app.renderer.render(app.stage);
+      sprite1.interactive = true;
+      sprite1.buttonMode = true;
 
-      tex1.x = app.renderer.screen.width / 2;
-      tex1.y = app.renderer.screen.height / 2;
-
-      // starSprite.x = app.renderer.screen.width / 1.2;
-      // starSprite.y = app.renderer.screen.height / 1.2;
-
-      // favSprite.x = app.renderer.screen.width / 2.2;
-      // favSprite.y = app.renderer.screen.height / 2.2;
-
-      tex1.rotation += 0.01;
-
-      // starSprite1.x = 50 + Math.sin(delta) * 1
-      // starSprite1.y = 10 + Math.sin(delta) * 1
-      // starSprite2.alpha = Math.sin(delta)
-      // starSprite.rotation += 0.01;
-      // favSprite.rotation -= 0.01;
+      for(let i = 0; i < ships.length; i++){
+        ships[i].rotation += Math.random() * 0.05
+      }
+    }
+    function animate2() {
+      delta += 0.1;
+      sprite1.rotation -= 0.01;
       app.renderer.render(app.stage);
     }
+
+    let ships = [];
+    let container = new PIXI.Container();
+    app.stage.addChild(container);
+
+    for (let i = 0; i < 50; i++) {
+      // let star = loader.resources.star.texture;
+      let ship = new PIXI.Sprite(tex2);
+      let rand = Math.random()
+      ship.scale = new PIXI.Point(rand,rand)
+      ship.x = Math.random() * app.renderer.screen.width;
+      ship.y = Math.random() * app.renderer.screen.height;
+      ship.tint = Math.random() * 0xffffff;
+      ship.anchor.set(0.5);
+      // ship.blendMode = PIXI.BLEND_MODES.MULTIPLY
+      container.addChild(ship);
+      ships.push(ship);
+    }
+
+    function animate3() {}
   });
 </script>
 

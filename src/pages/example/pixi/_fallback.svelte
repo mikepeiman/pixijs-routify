@@ -44,6 +44,18 @@
     // pixidiv.appendChild(app.view);
     renderer.backgroundColor = 0xe0f0ff;
 
+    let xdot = new PIXI.Graphics()
+    let xstar = new PIXI.Graphics()
+
+    xstar.x = renderer.width / 3
+    xstar.y = renderer.height / 3
+    stage.addChild(xstar)
+
+    
+
+
+
+
     const fav = PIXI.Texture.from("/favicon.png");
     const star = PIXI.Texture.from("/Ic_star_outline_24px.svg.png");
     // star.width = 300
@@ -52,19 +64,21 @@
     const starSprite1 = new PIXI.Sprite(star);
     starSprite1.width = 50;
     starSprite1.height = 50;
-    starSprite1.anchor.x = 0.125;
-    starSprite1.anchor.y = 0.125;
+    starSprite1.tint = 0xccbbaa;
+    starSprite1.position.set(.25, .75)
     starsGroup.addChild(starSprite1);
     // stage.addChild(starSprite1)
     const starSprite2 = new PIXI.Sprite(star);
     starSprite2.width = 35;
     starSprite2.height = 35;
+    starSprite2.tint = 0xaabbcc;
     starSprite2.anchor.x = 0.5;
     starSprite2.anchor.y = 0.5;
     starsGroup.addChild(starSprite2);
     const starSprite3 = new PIXI.Sprite(star);
     starSprite3.width = 65;
     starSprite3.height = 65;
+    starSprite3.tint = 0x00ccff;
     starSprite3.anchor.x = 0.975;
     starSprite3.anchor.y = 0.975;
     starsGroup.addChild(starSprite3);
@@ -77,9 +91,13 @@
 
     const ticker = new PIXI.Ticker();
     ticker.add(animate);
+    ticker.speed = 0.01;
     ticker.start();
 
+  let delta = 0
     function animate() {
+      delta += 1
+
       starsGroup.x = renderer.screen.width / 1.7;
       starsGroup.y = renderer.screen.height / 1.7;
 
@@ -90,6 +108,11 @@
       favSprite.y = renderer.screen.height / 2.2;
 
       starsGroup.rotation += 0.01
+
+
+      // starSprite1.x = 50 + Math.sin(delta) * 1
+      // starSprite1.y = 10 + Math.sin(delta) * 1
+      // starSprite2.alpha = Math.sin(delta)
       // starSprite.rotation += 0.01;
       favSprite.rotation -= 0.01;
       renderer.render(stage);

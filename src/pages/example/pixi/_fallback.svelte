@@ -24,7 +24,13 @@
     // container.position.y = 0 - app.renderer.screen.height / 2;
     // container.width = app.renderer.screen.width
     // container.height = app.renderer.screen.height
+    let rw = app.renderer.width
+    let rh = app.renderer.height
     container.position = new PIXI.Point(0.5, 0.5);
+    container.x = rw / 2;
+    container.y = rh / 2
+    container.width = rw
+    container.height = rh
     app.stage.addChild(container);
     let delta = 0;
     let _w = window.innerWidth;
@@ -69,25 +75,33 @@
     }
     let angle = 0;
     let shipC = new PIXI.Graphics();
-    shipC.lineStyle(1, 0xffb0ff);
-    shipC.beginFill(0xffbbff);
+    shipC.lineStyle(3, 0xafb0ff);
+    shipC.beginFill(0xafbbff);
     shipC.drawCircle(0, 0, 15);
     shipC.endFill();
+    // shipC.position = new PIXI.point(0,0)
     container.addChild(shipC)
-    function makeShipCircle() {
-      let w = container.width
-      let h = container.height
+
+
+    function makeShipCircle(el, w, h) {
+      // el = shipC
+      // let w = container.width
+      // let h = container.height
+      // w = 300
+      // h = 300
+      // w = parseInt(w)
+      // h = parseInt(h)
       shipC.x = w + w * Math.cos((angle * Math.PI) / 180);
       shipC.y = h + h * Math.sin((angle * Math.PI) / 180);
       angle++;
-      console.log(`makeShipCircle: angle ${angle}`)
+      console.log(`makeShipCircle: w ${w} h ${h} angle ${angle}, shipX ${shipC.x}, shipY ${shipC.y}`)
       if(angle > 360){angle = 0}
       // angle > 360 ? angle : (angle = 0);
       setTimeout(() => {
-        makeShipCircle()
+        makeShipCircle(el, w, h)
       }, 16);
     }
-    makeShipCircle()
+    makeShipCircle(shipC, 100.0, 100.0)
 
     function generateShips(fleetSize) {
       for (let i = 0; i < fleetSize; i++) {
@@ -112,16 +126,6 @@
       }
     }
 
-    // function sleep(milliseconds) {
-    //   const date = Date.now();
-    //   let currentDate = null;
-    //   // console.log(`inside sleep(${milliseconds})`);
-    //   do {
-    //     currentDate = Date.now();
-    //     // console.log(`inside currentDate(${currentDate})`);
-    //   } while (currentDate - date < milliseconds);
-    // }
-
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -130,51 +134,9 @@
     console.log(`container (ships) children `, container.children);
     // let delta = 0;
     function animate() {
-      // delta += 360 / ships.length;
       deltaX = 0.01;
-      let rand1 = Math.random();
-      let rand2 = Math.random();
-      let thisX = Math.round(rand1) > 0 ? 0.01 * rand1 : -0.01 * rand1;
-      let thisY = Math.round(rand2) > 0 ? 0.01 * rand2 : -0.01 * rand2;
-      // deltaY = deltaY + thisY
-      // console.log(`rand1 ${rand1} rand2 ${rand2} thisY `, thisY);
-      // delta = Math.random()
-      // app.renderer.render(app.stage);
-      // sleep(250);
-      // container.position.x = 100 + Math.sin(delta) * 10;
       for (let i = 0; i < ships.length; i++) {
-        // console.log(`ships[${i}] counted inside of animate()`);
-        // ships[i].x = Math.random() * 0.05;
-        let randX = Math.random();
-        let randY = Math.random();
-        if (Math.round(randX) > 0) {
-          ships[i].x +=
-            Math.sin(Math.random() * thisX) *
-            Math.random() *
-            _w *
-            Math.round(Math.random());
-        } else {
-          ships[i].x -=
-            Math.sin(Math.random() * thisX) *
-            Math.random() *
-            _w *
-            Math.round(Math.random());
-        }
-        if (Math.round(randY) > 0) {
-          ships[i].y +=
-            Math.sin(Math.random() * thisY) *
-            Math.random() *
-            _h *
-            Math.round(Math.random());
-        } else {
-          ships[i].y -=
-            Math.sin(Math.random() * thisY) *
-            Math.random() *
-            _h *
-            Math.round(Math.random());
-        }
 
-        // ship[i].y = 100 + Math.sin(delta) * 10
       }
     }
   });

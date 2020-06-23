@@ -24,13 +24,15 @@
     // container.position.y = 0 - app.renderer.screen.height / 2;
     // container.width = app.renderer.screen.width
     // container.height = app.renderer.screen.height
-    let rw = app.renderer.width
-    let rh = app.renderer.height
-    container.position = new PIXI.Point(0.5, 0.5);
-    container.x = rw / 2;
-    container.y = rh / 2
-    container.width = rw
-    container.height = rh
+    let rw = app.renderer.width;
+    let rh = app.renderer.height;
+    container.position = new PIXI.Point(0, 0);
+    // container.x = rw / 2;
+    // container.x = rw / 2;
+    // container.y = 0;
+    // container.y = 0;
+    container.width = rw;
+    container.height = rh;
     app.stage.addChild(container);
     let delta = 0;
     let _w = window.innerWidth;
@@ -38,7 +40,7 @@
 
     // generate array of ships Graphics() objects
     let ships = [];
-    // generateShips(50);
+    generateShips(50);
 
     app.ticker.deltaMS = 1000;
     app.ticker.deltaTime = 0.1;
@@ -80,8 +82,7 @@
     shipC.drawCircle(0, 0, 15);
     shipC.endFill();
     // shipC.position = new PIXI.point(0,0)
-    container.addChild(shipC)
-
+    container.addChild(shipC);
 
     function makeShipCircle(el, w, h) {
       // el = shipC
@@ -94,14 +95,27 @@
       shipC.x = w + w * Math.cos((angle * Math.PI) / 180);
       shipC.y = h + h * Math.sin((angle * Math.PI) / 180);
       angle++;
-      console.log(`makeShipCircle: w ${w} h ${h} angle ${angle}, shipX ${shipC.x}, shipY ${shipC.y}`)
-      if(angle > 360){angle = 0}
+      // console.log(`makeShipCircle: w ${w} h ${h} angle ${angle}, shipX ${shipC.x}, shipY ${shipC.y}`)
+      if (angle > 360) {
+        angle = 0;
+      }
       // angle > 360 ? angle : (angle = 0);
       setTimeout(() => {
-        makeShipCircle(el, w, h)
+        makeShipCircle(el, w, h);
       }, 16);
     }
-    makeShipCircle(shipC, 100.0, 100.0)
+    let w = _w / 2;
+    let h = _h / 2;
+    makeShipCircle(shipC, w, h);
+
+    function nextCircle(el, w, h) {
+      el.x = w + w * Math.cos((angle * Math.PI) / 180);
+      el.y = h + h * Math.sin((angle * Math.PI) / 180);
+      angle++;
+      if (angle > 360) {
+        angle = 0;
+      }
+    }
 
     function generateShips(fleetSize) {
       for (let i = 0; i < fleetSize; i++) {
@@ -136,7 +150,7 @@
     function animate() {
       deltaX = 0.01;
       for (let i = 0; i < ships.length; i++) {
-
+        nextCircle(ships[i], w, h);
       }
     }
   });

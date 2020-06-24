@@ -64,19 +64,24 @@
     }
 
     placeShipsAroundStar(origin, radius, _w, _h, 20);
-
+    radius = 75;
     origin = { x: w - radius * 2, y: h + radius * 2 };
     placeShipsAroundStar(origin, radius, _w, _h, 20);
-
+    radius = 35;
     origin = { x: w + radius * 2, y: h - radius * 2 };
     placeShipsAroundStar(origin, radius, _w, _h, 20);
 
-    async function placeShipsAroundStar(origin, radius, w, h, numShips) {
+    function createStarContainer(origin) {
+      console.log(`createStarContainer(origin) ${origin.x}:${origin.y}`);
       let container = new PIXI.Container();
-      mainContainer.addChild(container);
+      // mainContainer.addChild(container);
       container.position = new PIXI.Point(origin.x, origin.y);
-      app.stage.addChild(container);
-      let increase = (Math.PI * 2) / numShips;
+      // app.stage.addChild(container);
+      return container;
+    }
+
+    function createStar(radius, origin) {
+      let container = new PIXI.Container();
       let star = new PIXI.Graphics();
       let numStars = stars.length;
       console.log(`number of stars: ${numStars}`);
@@ -87,11 +92,26 @@
       star.drawCircle(0, 0, radius - 15);
       star.endFill();
       star.tint = 0xffffff;
-      star.x = origin.x;
-      star.y = origin.y;
+      star.x = container.x;
+      star.y = container.y;
+      star.origin = origin;
+      // console.log('container: ',container)
       container.addChild(star);
       stars = [...stars, star];
+      return container;
+    }
 
+    async function placeShipsAroundStar(origin, radius, w, h, numShips) {
+      let container = createStar(radius, origin);
+      container.position = new PIXI.Point(origin.x, origin.y);
+      mainContainer.addChild(container);
+
+      let increase = (Math.PI * 2) / numShips;
+      for (let z = 0; z < stars.length; z++) {
+        console.log(`separate stars loop, star ${z}`);
+      }
+      // work for tomorrow: create ships for each star as array in that star object
+      // add animation loop as distinct function for each star-ships array
       for (let j = 0; j < numShips; j++) {
         let ship = new PIXI.Graphics();
         ship.lineStyle(1, 0x0fb0ff);
@@ -101,7 +121,7 @@
         ship.tint = Math.random() * 0xffffff;
         ship.x = origin.x + radius * Math.cos(angle);
         ship.y = origin.y + radius * Math.sin(angle);
-        container.addChild(ship);
+        mainContainer.addChild(ship);
         ships = [...ships, ship];
         angle += increase;
       }
@@ -120,10 +140,6 @@
         ship.y = origin.y + radius * Math.sin(angle);
         angle += increase + rotationSpeed;
       }
-      // if (angle > 360) {
-      //   angle = 0;
-      // }
-      // angle > 360 ? angle : (angle = 0);
       setTimeout(() => {
         makeShipCircle(radius, origin, ships, increase);
       }, 16);

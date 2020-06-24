@@ -5,6 +5,7 @@
   //  using video tutorial at https://www.youtube.com/watch?v=2J0VUiozAVM&list=PL08jItIqOb2oGcyrgREbrm_b9OW7TE1ji&index=3
   let ships = [],
     stars = [],
+    starSystems = [],
     // radialInterval,
     // numShips,
     globalCount = 0,
@@ -64,6 +65,56 @@
       app.renderer.resize(_w, _h);
     }
 
+// look for a js snippet or library that can generate a non-overlapping coordinate system
+    function seedRandomUniverse(
+      numStars,
+      radiusMin,
+      radiusMax,
+      starBuffer,
+      shipsMin,
+      shipsMax
+    ) {
+      let radii = [],
+        coords = [],
+        origin = {};
+      for (let i = 0; i < numStars; i++) {
+        origin = { x: _w * Math.random(), y: _h * Math.random() };
+        console.log("origin: ", origin);
+        coords.forEach(prior => {
+          console.log(
+            `origin.x ${origin.x} - prior.x ${prior.x} (=${origin.x -
+              prior.x}) < radiusMax ${radiusMax} + starBuffer ${starBuffer} (=${radiusMax +
+              starBuffer})`
+          );
+          if (origin.x - prior.x < radiusMax + starBuffer) {
+          } else if (prior.x - origin.x < radiusMax + starBuffer) {
+          }
+          if (origin.y) {
+          }
+        });
+        coords = [...coords, origin];
+      }
+    }
+
+    seedRandomUniverse(5, 15, 75, 5, 55);
+
+    function generateValidCoords(coords) {
+      
+      if (
+        origin.x - prior.x > radiusMax + starBuffer &&
+        prior.x - origin.x > radiusMax + starBuffer &&
+        origin.y - prior.y > radiusMax + starBuffer &&
+        prior.y - origin.y > radiusMax + starBuffer
+      ) {
+        return coords
+      }
+        if (origin.x - prior.x < radiusMax + starBuffer) {}
+        if (prior.x - origin.x < radiusMax + starBuffer) {}
+        if (origin.y - prior.y < radiusMax + starBuffer) {}
+        if (prior.y - origin.y < radiusMax + starBuffer) {}
+      )
+    }
+
     createStarAndShips(origin, radius, 20);
     radius = 75;
     origin = { x: w - radius * 2, y: h + radius * 2 };
@@ -74,7 +125,7 @@
 
     function createStarAndShips(origin, radius, numShips) {
       let container = createStar(radius, origin);
-      addShipsToStar1(container, numShips);
+      addShipsToStar(container, numShips);
     }
 
     function createStar(radius, origin) {
@@ -103,12 +154,12 @@
       return container;
     }
 
-    async function addShipsToStar1(container, numShips) {
+    async function addShipsToStar(container, numShips) {
       container.position = new PIXI.Point(origin.x, origin.y);
       mainContainer.addChild(container);
       let increase = (Math.PI * 2) / numShips;
       let id = container.id;
-      console.log(`addShipsToStar1 container.id ${container.id}`);
+      console.log(`addShipsToStar container.id ${container.id}`);
       let star = stars[id];
       ships = [];
       star.numShips = numShips;
@@ -130,20 +181,10 @@
 
     function makeShipsCircle() {
       let ship, star;
-
       for (let z = 0; z < stars.length; z++) {
         star = stars[z];
         origin = star.origin;
         radius = star.radius;
-        // console.log(
-        //   `makeShipsCircle() stars loop - star id ${star.id}, ships array length ${star.ships.length}, numShips value ${star.numShips}`
-        // );
-        // console.log(
-        //   `makeShipsCircle() stars loop - star x ${star.x}, y ${star.y}, radius ${star.radius} `
-        // );
-        //         console.log(
-        //   `makeShipsCircle() stars loop - star ORIGIN x ${star.origin.x}, y ${star.origin.y}, radius ${star.radius} `
-        // );
         let increase = (Math.PI * 2) / star.numShips;
         for (let i = 0; i < star.numShips; i++) {
           // console.log("star.ships.length: ", star.ships.length);
@@ -162,7 +203,7 @@
 
     function animate() {
       globalCount++;
-      console.log(`GLOBAL COUNT ${globalCount} `);
+      // console.log(`GLOBAL COUNT ${globalCount} `);
       makeShipsCircle();
       // requestAnimationFrame(animate)
       // for (let z = 0; z < stars.length; z++) {

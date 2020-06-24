@@ -10,7 +10,7 @@
     // radialInterval,
     // numShips,
     globalCount = 0,
-    rotationSpeed = 0.0001;
+    rotationSpeed = 0.00001;
   // $: {
   //   numShips = ships.length || 30;
   //   console.log(`numShips reactive update ${numShips}`);
@@ -66,34 +66,6 @@
       app.renderer.resize(_w, _h);
     }
 
-    // look for a js snippet or library that can generate a non-overlapping coordinate system
-    //  https://github.com/jeffrey-hearn/poisson-disk-sample/blob/master/demo.js
-
-    console.log(`Poisson Disc args: _w: ${_w} _h: ${_h}`);
-    let sampler = new PoissonDiskSampler(_w, _h, 75, 10);
-    // sampler.grid.drawGrid()
-    let solution = sampler.sampleUntilSolution();
-
-    console.log(`Poisson Disc sampler result:`, sampler);
-    console.log(`Poisson Disc sampler solution:`, solution);
-
-    // get n number of random elements from array:
-    // great solution here: https://stackoverflow.com/questions/19269545/how-to-get-n-no-elements-randomly-from-an-array
-
-    function getRandom(arr, n) {
-      var result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
-      if (n > len)
-        throw new RangeError("getRandom: more elements taken than available");
-      while (n--) {
-        var x = Math.floor(Math.random() * len);
-        result[n] = arr[x in taken ? taken[x] : x];
-        taken[x] = --len in taken ? taken[len] : len;
-      }
-      return result;
-    }
-
     // let gax = getRandom(solution, 20);
     // gax.forEach(coord => {
     //   let dot = new PIXI.Graphics();
@@ -105,6 +77,9 @@
     //   mainContainer.addChild(dot);
     // });
 
+    // look for a js snippet or library that can generate a non-overlapping coordinate system
+    //  https://github.com/jeffrey-hearn/poisson-disk-sample/blob/master/demo.js
+
     function seedRandomUniverse(
       numStars,
       radiusMin,
@@ -115,38 +90,23 @@
     ) {
       let sampler = new PoissonDiskSampler(_w, _h, radiusMax + starBuffer, 5);
       let solution = sampler.sampleUntilSolution();
-      getRandom(solution, numStars);
+      let galaxy = getRandom(solution, numStars);
+      galaxy.forEach(point => {
+        let rad = radiusMin + Math.random() * (radiusMax - radiusMin);
+        let numShips = shipsMin + Math.random() * (shipsMax - shipsMin);
+        createStarAndShips(point, rad, numShips);
+      });
     }
 
-    // seedRandomUniverse(5, 15, 75, 5, 55);
+    seedRandomUniverse(12, 15, 75, 45, 3, 30);
 
-    // function generateValidCoords(coords) {
-    //   let x = coords.x - prior.x
-    //   let y = coords.y - prior.y
-    //   let distance = Math.sqrt(x*x+y*y)
-    //   console.log(`Distance between ${coords.x},${coords.y} and ${prior.x},${prior.x} is ${distance}`)
-    //   if (
-    //     origin.x - prior.x > radiusMax + starBuffer &&
-    //     prior.x - origin.x > radiusMax + starBuffer &&
-    //     origin.y - prior.y > radiusMax + starBuffer &&
-    //     prior.y - origin.y > radiusMax + starBuffer
-    //   ) {
-    //     return coords
-    //   }
-    //     if (origin.x - prior.x < radiusMax + starBuffer) {}
-    //     if (prior.x - origin.x < radiusMax + starBuffer) {}
-    //     if (origin.y - prior.y < radiusMax + starBuffer) {}
-    //     if (prior.y - origin.y < radiusMax + starBuffer) {}
-    //   )
-    // }
-
-    createStarAndShips(origin, radius, 20);
-    radius = 75;
-    origin = { x: w - radius * 2, y: h + radius * 2 };
-    createStarAndShips(origin, radius, 12);
-    radius = 35;
-    origin = { x: w + radius * 2, y: h - radius * 2 };
-    createStarAndShips(origin, radius, 7);
+    // createStarAndShips(origin, radius, 20);
+    // radius = 75;
+    // origin = { x: w - radius * 2, y: h + radius * 2 };
+    // createStarAndShips(origin, radius, 12);
+    // radius = 35;
+    // origin = { x: w + radius * 2, y: h - radius * 2 };
+    // createStarAndShips(origin, radius, 7);
 
     function createStarAndShips(origin, radius, numShips) {
       let container = createStar(radius, origin);
@@ -210,7 +170,7 @@
         star = stars[z];
         origin = star.origin;
         radius = star.radius;
-        let increase = (Math.PI * 2) / star.numShips;
+        let increase = (Math.PI * 2) / star.ships.length;
         for (let i = 0; i < star.numShips; i++) {
           // console.log("star.ships.length: ", star.ships.length);
           // console.log("star.numShips: ", star.numShips);
@@ -218,7 +178,7 @@
           // console.log(`This ship x and y: ${ship.x}, ${ship.y}`);
           ship.x = star.origin.x + star.radius * Math.cos(angle);
           ship.y = star.origin.y + star.radius * Math.sin(angle);
-          angle += increase + rotationSpeed;
+          angle += increase + rotationSpeed
         }
       }
     }
@@ -239,6 +199,23 @@
       // app.renderer.render(app.stage)
     }
   });
+
+  // get n number of random elements from array:
+  // great solution here: https://stackoverflow.com/questions/19269545/how-to-get-n-no-elements-randomly-from-an-array
+
+  function getRandom(arr, n) {
+    var result = new Array(n),
+      len = arr.length,
+      taken = new Array(len);
+    if (n > len)
+      throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+      var x = Math.floor(Math.random() * len);
+      result[n] = arr[x in taken ? taken[x] : x];
+      taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+  }
 </script>
 
 <style>

@@ -3,14 +3,16 @@
   import * as PIXI from "pixi.js";
   import { circular } from "./circular.js";
   import { PoissonDiskSampler } from "./poisson-disk";
+  import Proton from 'proton-engine';
+  // import { Engine, Sink, Drag } from "heegs";
   //  using video tutorial at https://www.youtube.com/watch?v=2J0VUiozAVM&list=PL08jItIqOb2oGcyrgREbrm_b9OW7TE1ji&index=3
   let ships = [],
     stars = [],
     starSystems = [],
     globalCount = 0,
-    starBuffer = 45,
-    orbitBuffer = 5,
-    shipSize = 1,
+    starBuffer = 40,
+    orbitBuffer = 6,
+    shipSize = 2,
     rotationSpeed = 0.00001;
 
   onMount(() => {
@@ -18,7 +20,7 @@
     if (!PIXI.utils.isWebGLSupported()) {
       type = "canvas";
     }
-
+    // const heegs = new Engine(numberOfParticles);
     let canvas = document.querySelector("#pixi");
     let app = new PIXI.Application({
       view: canvas,
@@ -94,7 +96,7 @@
       });
     }
 
-    seedRandomUniverse(100, 5, 12, 25, 3, 30);
+    seedRandomUniverse(50, 8, 16, starBuffer, 5, 30);
 
     function createStarAndShips(origin, radius, numShips, starBuffer) {
       let container = createStar(radius, origin, starBuffer);
@@ -115,7 +117,7 @@
         `number of stars: ${numStars}, star.id ${star.id}, container.id ${container.id}`
       );
       star.starBuffer = starBuffer;
-      star.orbitBuffer = orbitBuffer
+      star.orbitBuffer = orbitBuffer;
       star.id = numStars;
       star.origin = origin;
       star.radius = radius;

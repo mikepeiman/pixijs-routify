@@ -11,7 +11,8 @@
     ["./api", "Api"],
     ["./app", "App"],
     ["./transitions/tabs", "Transitions"],
-    ["./pixi", "PixiJS"]
+    ["./pixi", "PixiJS"],
+    ["./proton", "Proton"]
   ];
 </script>
 

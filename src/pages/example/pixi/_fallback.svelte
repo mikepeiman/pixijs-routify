@@ -130,7 +130,7 @@
 
     function makeShipsCircle() {
       let ship, star;
-      let increase = (Math.PI * 2) / ships.length;
+
       for (let z = 0; z < stars.length; z++) {
         star = stars[z];
         origin = star.origin;
@@ -144,7 +144,10 @@
         //         console.log(
         //   `makeShipsCircle() stars loop - star ORIGIN x ${star.origin.x}, y ${star.origin.y}, radius ${star.radius} `
         // );
+        let increase = (Math.PI * 2) / star.numShips;
         for (let i = 0; i < star.numShips; i++) {
+          // console.log("star.ships.length: ", star.ships.length);
+          // console.log("star.numShips: ", star.numShips);
           ship = star.ships[i];
           // console.log(`This ship x and y: ${ship.x}, ${ship.y}`);
           ship.x = star.origin.x + star.radius * Math.cos(angle);

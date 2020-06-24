@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import * as PIXI from "pixi.js";
   import { circular } from "./circular.js";
+  import { PoissonDiskSampler } from "./poisson-disk";
   //  using video tutorial at https://www.youtube.com/watch?v=2J0VUiozAVM&list=PL08jItIqOb2oGcyrgREbrm_b9OW7TE1ji&index=3
   let ships = [],
     stars = [],
@@ -65,7 +66,45 @@
       app.renderer.resize(_w, _h);
     }
 
-// look for a js snippet or library that can generate a non-overlapping coordinate system
+    // look for a js snippet or library that can generate a non-overlapping coordinate system
+    //  https://github.com/jeffrey-hearn/poisson-disk-sample/blob/master/demo.js
+
+    console.log(`Poisson Disc args: _w: ${_w} _h: ${_h}`);
+    let sampler = new PoissonDiskSampler(_w, _h, 75, 10);
+    // sampler.grid.drawGrid()
+    let solution = sampler.sampleUntilSolution();
+
+    console.log(`Poisson Disc sampler result:`, sampler);
+    console.log(`Poisson Disc sampler solution:`, solution);
+
+    // get n number of random elements from array:
+    // great solution here: https://stackoverflow.com/questions/19269545/how-to-get-n-no-elements-randomly-from-an-array
+
+    function getRandom(arr, n) {
+      var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+      if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+      while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+      }
+      return result;
+    }
+
+    // let gax = getRandom(solution, 20);
+    // gax.forEach(coord => {
+    //   let dot = new PIXI.Graphics();
+    //   dot.beginFill(0x000055);
+    //   dot.drawCircle(0, 0, 3);
+    //   dot.endFill;
+    //   dot.x = coord.x;
+    //   dot.y = coord.y;
+    //   mainContainer.addChild(dot);
+    // });
+
     function seedRandomUniverse(
       numStars,
       radiusMin,
@@ -74,46 +113,32 @@
       shipsMin,
       shipsMax
     ) {
-      let radii = [],
-        coords = [],
-        origin = {};
-      for (let i = 0; i < numStars; i++) {
-        origin = { x: _w * Math.random(), y: _h * Math.random() };
-        console.log("origin: ", origin);
-        coords.forEach(prior => {
-          console.log(
-            `origin.x ${origin.x} - prior.x ${prior.x} (=${origin.x -
-              prior.x}) < radiusMax ${radiusMax} + starBuffer ${starBuffer} (=${radiusMax +
-              starBuffer})`
-          );
-          if (origin.x - prior.x < radiusMax + starBuffer) {
-          } else if (prior.x - origin.x < radiusMax + starBuffer) {
-          }
-          if (origin.y) {
-          }
-        });
-        coords = [...coords, origin];
-      }
+      let sampler = new PoissonDiskSampler(_w, _h, radiusMax + starBuffer, 5);
+      let solution = sampler.sampleUntilSolution();
+      getRandom(solution, numStars);
     }
 
-    seedRandomUniverse(5, 15, 75, 5, 55);
+    // seedRandomUniverse(5, 15, 75, 5, 55);
 
-    function generateValidCoords(coords) {
-      
-      if (
-        origin.x - prior.x > radiusMax + starBuffer &&
-        prior.x - origin.x > radiusMax + starBuffer &&
-        origin.y - prior.y > radiusMax + starBuffer &&
-        prior.y - origin.y > radiusMax + starBuffer
-      ) {
-        return coords
-      }
-        if (origin.x - prior.x < radiusMax + starBuffer) {}
-        if (prior.x - origin.x < radiusMax + starBuffer) {}
-        if (origin.y - prior.y < radiusMax + starBuffer) {}
-        if (prior.y - origin.y < radiusMax + starBuffer) {}
-      )
-    }
+    // function generateValidCoords(coords) {
+    //   let x = coords.x - prior.x
+    //   let y = coords.y - prior.y
+    //   let distance = Math.sqrt(x*x+y*y)
+    //   console.log(`Distance between ${coords.x},${coords.y} and ${prior.x},${prior.x} is ${distance}`)
+    //   if (
+    //     origin.x - prior.x > radiusMax + starBuffer &&
+    //     prior.x - origin.x > radiusMax + starBuffer &&
+    //     origin.y - prior.y > radiusMax + starBuffer &&
+    //     prior.y - origin.y > radiusMax + starBuffer
+    //   ) {
+    //     return coords
+    //   }
+    //     if (origin.x - prior.x < radiusMax + starBuffer) {}
+    //     if (prior.x - origin.x < radiusMax + starBuffer) {}
+    //     if (origin.y - prior.y < radiusMax + starBuffer) {}
+    //     if (prior.y - origin.y < radiusMax + starBuffer) {}
+    //   )
+    // }
 
     createStarAndShips(origin, radius, 20);
     radius = 75;

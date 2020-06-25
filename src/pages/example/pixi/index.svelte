@@ -3,7 +3,7 @@
   import * as PIXI from "pixi.js";
   import { circular } from "./circular.js";
   import { PoissonDiskSampler } from "./poisson-disk";
-  import Proton from 'proton-engine';
+  import Proton from "proton-engine";
   // import { Engine, Sink, Drag } from "heegs";
   //  using video tutorial at https://www.youtube.com/watch?v=2J0VUiozAVM&list=PL08jItIqOb2oGcyrgREbrm_b9OW7TE1ji&index=3
   let ships = [],
@@ -82,54 +82,64 @@
       );
       let solution = sampler.sampleUntilSolution();
       let galaxy = getRandom(solution, numStars);
-      galaxy.forEach(point => {
+      galaxy.forEach((point, i) => {
         let radius =
           radiusMin + Math.floor(Math.random() * (radiusMax - radiusMin));
         let numShips =
           shipsMin + Math.floor(Math.random() * (shipsMax - shipsMin));
         console.log(
-          `galaxy.forEach point {x: ${point.x}, y: ${point.y}}=> radius ${radius}, # of ships ${numShips}`
+          `galaxy.forEach i: ${i} point {x: ${point.x}, y: ${point.y}}=> radius ${radius}, # of ships ${numShips}`
         );
         point.x = point.x + mainContainerBuffer;
         point.y = point.y + mainContainerBuffer;
+        point.i = i
         createStarAndShips(point, radius, numShips, starBuffer);
       });
     }
 
-    seedRandomUniverse(50, 8, 16, starBuffer, 5, 30);
+    seedRandomUniverse(10, 10, 30, starBuffer, 30, 120);
 
-    function createStarAndShips(origin, radius, numShips, starBuffer) {
-      let container = createStar(radius, origin, starBuffer);
-      // container.position = new PIXI.Point(origin.x, origin.y);
-      // container.x = origin.x;
-      // container.y = origin.y
-      addShipsToStar(container, origin, numShips, starBuffer);
+    function getCircumference(radius) {
+      let c = radius * Math.PI * 2;
+      return c;
     }
 
-    function createStar(radius, origin) {
+    function createStarAndShips(point, radius, numShips, starBuffer) {
+      let container = createStar(radius, point, starBuffer);
+      // container.position = new PIXI.Point(point.x, point.y);
+      // container.x = point.x;
+      // container.y = point.y
+      addShipsToStar(container, point, numShips, starBuffer);
+    }
+
+    function createStar(radius, point) {
       let container = new PIXI.Container();
       mainContainer.addChild(container);
       let star = new PIXI.Graphics();
       container.addChild(star);
       let numStars = stars.length;
       container.id = numStars;
-      console.log(
-        `number of stars: ${numStars}, star.id ${star.id}, container.id ${container.id}`
-      );
+      let c = getCircumference(radius + orbitBuffer);
       star.starBuffer = starBuffer;
       star.orbitBuffer = orbitBuffer;
-      star.id = numStars;
-      star.origin = origin;
+      star.orbitCirc = c;
+      star.origin = point;
       star.radius = radius;
       // star.lineStyle(1, 0x0fb0ff);
       star.beginFill(Math.random() * 0xffffff);
       star.drawCircle(0, 0, radius);
       star.endFill();
       star.tint = 0xffffff;
-      star.x = origin.x;
-      star.y = origin.y;
-      star.position = new PIXI.Point(origin.x, origin.y);
-
+      star.x = point.x;
+      star.y = point.y;
+      star.id = point.i
+      star.position = new PIXI.Point(point.x, point.y);
+      console.log(
+        `createStar(radius, point): star.id ${star.id}, circumference ${c}`
+      );
+            console.log(
+        `createStar(radius, point): 30 ships @ 2px each with equal spacing: ${30*2*2}`
+      );
       // console.log("container.x: ", container.x);
       // console.log("container.y: ", container.y);
       // console.log("container.position: ", container.position);
@@ -144,15 +154,19 @@
 
     function addShipsToStar(container, origin, numShips, starBuffer) {
       mainContainer.addChild(container);
+
       let increase = (Math.PI * 2) / numShips;
       let id = container.id;
-      console.log(
-        `addShipsToStar container.id ${container.id} starBuffer ${starBuffer}`
-      );
       let star = stars[id];
       ships = [];
       star.numShips = numShips;
-      console.log(`addShipsToStar, current star: `, star);
+            // we need to determine number of ships in one complete orbit to determine angle and radius increment
+      
+      let numShipsInOneOrbit = star.orbitCirc / (shipSize * 3)
+      let outwardSpiralIncrease =  (shipSize * 3) / numShipsInOneOrbit
+      let spiral = 0
+      let newIncrease = Math.PI * 2 / numShipsInOneOrbit
+      console.log(`addShipsToStar, numShipsInOneOrbit star radius ${star.radius}: ${numShipsInOneOrbit}`);
       for (let i = 0; i < numShips; i++) {
         let ship = new PIXI.Graphics();
         // ship.lineStyle(1, 0x0fb0ff);
@@ -160,11 +174,13 @@
         ship.drawCircle(0, 0, shipSize);
         ship.endFill();
         ship.tint = 0xffffff;
-        ship.x = origin.x + 0 * Math.cos(angle);
-        ship.y = origin.y + (starBuffer + radius) * Math.sin(angle);
+        ship.x = origin.x + (star.radius + orbitBuffer + spiral) * Math.cos(angle);
+        ship.y = origin.y +  (star.radius + orbitBuffer + spiral) * Math.sin(angle);
         container.addChild(ship);
         ships = [...ships, ship];
-        angle += increase;
+        angle += newIncrease;
+        spiral += outwardSpiralIncrease
+        
       }
       star.ships = ships;
     }
@@ -196,7 +212,7 @@
     function animate() {
       globalCount++;
       // console.log(`GLOBAL COUNT ${globalCount} `);
-      makeShipsCircle();
+      // makeShipsCircle();
       // requestAnimationFrame(animate)
       // for (let z = 0; z < stars.length; z++) {
       //   let star = stars[z]

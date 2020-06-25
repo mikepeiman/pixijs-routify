@@ -13,8 +13,11 @@
     starBuffer = 40,
     orbitBuffer = 6,
     shipSize = 2,
-    rotationSpeed = 0.00001;
+    rotationSpeedConstant = 1/10000000;
+    
 
+$: totalShips = 1
+$: rotationSpeed = rotationSpeedConstant / totalShips
   onMount(() => {
     let type = "WebGL";
     if (!PIXI.utils.isWebGLSupported()) {
@@ -92,7 +95,8 @@
         );
         point.x = point.x + mainContainerBuffer;
         point.y = point.y + mainContainerBuffer;
-        point.i = i
+        point.i = i;
+        totalShips += numShips
         createStarAndShips(point, radius, numShips, starBuffer);
       });
     }
@@ -132,22 +136,16 @@
       star.tint = 0xffffff;
       star.x = point.x;
       star.y = point.y;
-      star.id = point.i
+      star.id = point.i;
       star.position = new PIXI.Point(point.x, point.y);
       console.log(
         `createStar(radius, point): star.id ${star.id}, circumference ${c}`
       );
-            console.log(
-        `createStar(radius, point): 30 ships @ 2px each with equal spacing: ${30*2*2}`
+      console.log(
+        `createStar(radius, point): 30 ships @ 2px each with equal spacing: ${30 *
+          2 *
+          2}`
       );
-      // console.log("container.x: ", container.x);
-      // console.log("container.y: ", container.y);
-      // console.log("container.position: ", container.position);
-      // console.log("star.x: ", star.x);
-      // console.log("star.y: ", star.y);
-      // console.log("star.position: ", star.position);
-
-      // console.log("container with star: ", container);
       stars = [...stars, star];
       return container;
     }
@@ -160,13 +158,15 @@
       let star = stars[id];
       ships = [];
       star.numShips = numShips;
-            // we need to determine number of ships in one complete orbit to determine angle and radius increment
-      
-      let numShipsInOneOrbit = star.orbitCirc / (shipSize * 3)
-      let outwardSpiralIncrease =  (shipSize * 3) / numShipsInOneOrbit
-      let spiral = 0
-      let newIncrease = Math.PI * 2 / numShipsInOneOrbit
-      console.log(`addShipsToStar, numShipsInOneOrbit star radius ${star.radius}: ${numShipsInOneOrbit}`);
+      // we need to determine number of ships in one complete orbit to determine angle and radius increment
+
+      let numShipsInOneOrbit = star.orbitCirc / (shipSize * 3);
+      let outwardSpiralIncrease = (shipSize * 3) / numShipsInOneOrbit;
+      let spiral = 0;
+      let newIncrease = (Math.PI * 2) / numShipsInOneOrbit;
+      console.log(
+        `addShipsToStar, numShipsInOneOrbit star radius ${star.radius}: ${numShipsInOneOrbit}`
+      );
       for (let i = 0; i < numShips; i++) {
         let ship = new PIXI.Graphics();
         // ship.lineStyle(1, 0x0fb0ff);
@@ -174,13 +174,14 @@
         ship.drawCircle(0, 0, shipSize);
         ship.endFill();
         ship.tint = 0xffffff;
-        ship.x = origin.x + (star.radius + orbitBuffer + spiral) * Math.cos(angle);
-        ship.y = origin.y +  (star.radius + orbitBuffer + spiral) * Math.sin(angle);
+        ship.x =
+          origin.x + (star.radius + orbitBuffer + spiral) * Math.cos(angle);
+        ship.y =
+          origin.y + (star.radius + orbitBuffer + spiral) * Math.sin(angle);
         container.addChild(ship);
         ships = [...ships, ship];
         angle += newIncrease;
-        spiral += outwardSpiralIncrease
-        
+        spiral += outwardSpiralIncrease;
       }
       star.ships = ships;
     }
@@ -191,6 +192,10 @@
         star = stars[z];
         origin = star.origin;
         radius = star.radius;
+        let numShipsInOneOrbit = star.orbitCirc / (shipSize * 3);
+        let outwardSpiralIncrease = (shipSize * 3) / numShipsInOneOrbit;
+        let spiral = 0;
+        let newIncrease = (Math.PI * 2) / numShipsInOneOrbit;
         let increase = (Math.PI * 2) / star.ships.length;
         for (let i = 0; i < star.numShips; i++) {
           // console.log("star.ships.length: ", star.ships.length);
@@ -198,10 +203,13 @@
           ship = star.ships[i];
           // console.log(`This ship x and y: ${ship.x}, ${ship.y}`);
           ship.x =
-            star.origin.x + (star.orbitBuffer + star.radius) * Math.cos(angle);
+            star.origin.x +
+            (star.radius + orbitBuffer + spiral) * Math.cos(angle);
           ship.y =
-            star.origin.y + (star.orbitBuffer + star.radius) * Math.sin(angle);
-          angle += increase + rotationSpeed;
+            star.origin.y +
+            (star.radius + orbitBuffer + spiral) * Math.sin(angle);
+          angle += newIncrease + rotationSpeed;
+          spiral += outwardSpiralIncrease;
         }
       }
     }
@@ -212,7 +220,7 @@
     function animate() {
       globalCount++;
       // console.log(`GLOBAL COUNT ${globalCount} `);
-      // makeShipsCircle();
+      makeShipsCircle();
       // requestAnimationFrame(animate)
       // for (let z = 0; z < stars.length; z++) {
       //   let star = stars[z]

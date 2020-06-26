@@ -12,7 +12,8 @@
     ["./app", "App"],
     ["./transitions/tabs", "Transitions"],
     ["./pixi", "PixiJS"],
-    ["./proton", "Proton"]
+    ["./proton", "Proton"],
+    ["./proton2", "Proton2"]
   ];
 </script>
 
@@ -36,7 +37,7 @@
   .backlink {
     position: absolute;
     left: 16px;
-    color: #C848C1;
+    color: #c848c1;
     font-weight: bold;
   }
   .active {

@@ -51,13 +51,13 @@
         new Proton.Span(10, 20),
         new Proton.Span(0.1, 0.25)
       );
-      emitter.addInitialize(new Proton.Mass(1));
-      emitter.addInitialize(new Proton.Radius(1, 12));
-      emitter.addInitialize(new Proton.Life(2, 4));
+      emitter.addInitialize(new Proton.Mass(10));
+      emitter.addInitialize(new Proton.Radius(1, 2));
+      emitter.addInitialize(new Proton.Life(4, 8));
       emitter.addInitialize(
         new Proton.Velocity(
-          new Proton.Span(2, 4),
-          new Proton.Span(-30, 30),
+          new Proton.Span(0.1, 2),
+          new Proton.Span(-3, 1),
           "polar"
         )
       );

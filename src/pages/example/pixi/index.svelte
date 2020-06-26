@@ -44,8 +44,8 @@ $: rotationSpeed = rotationSpeedConstant / totalShips
     let _h = window.innerHeight;
     let w = _w / 2;
     let h = _h / 2;
-    let main_w = _w - 150;
-    let main_h = _h - 150;
+    let main_w = app.renderer.width - 150;
+    let main_h = app.renderer.height - 150;
     let origin = { x: w, y: h };
     let angle = 0;
     let radius = 50;
@@ -78,8 +78,8 @@ $: rotationSpeed = rotationSpeedConstant / totalShips
       shipsMax
     ) {
       let sampler = new PoissonDiskSampler(
-        _w - mainContainerBuffer * 2,
-        _h - mainContainerBuffer * 2,
+        app.renderer.width - mainContainerBuffer * 2,
+        app.renderer.height - mainContainerBuffer * 2,
         radiusMax + starBuffer,
         5
       );
@@ -220,7 +220,9 @@ $: rotationSpeed = rotationSpeedConstant / totalShips
     function animate() {
       globalCount++;
       // console.log(`GLOBAL COUNT ${globalCount} `);
-      makeShipsCircle();
+
+      // makeShipsCircle();
+
       // requestAnimationFrame(animate)
       // for (let z = 0; z < stars.length; z++) {
       //   let star = stars[z]
@@ -259,6 +261,6 @@ $: rotationSpeed = rotationSpeedConstant / totalShips
 </style>
 
 <div style="text-align: center">
-  <h1>PixiJS playground</h1>
+  <h1>PixiJS Pax Galaxia Redux</h1>
   <canvas id="pixi" />
 </div>

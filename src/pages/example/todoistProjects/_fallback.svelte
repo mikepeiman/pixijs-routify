@@ -58,4 +58,4 @@
 </div>
 
 <CrudWidget data={projects} name="Projects" />
-<CrudWidget data={tasks} name="Tasks" />
+<!-- <CrudWidget data={tasks} name="Tasks" /> -->

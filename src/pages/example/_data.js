@@ -1,6 +1,6 @@
 import axios from "axios";
 let gun = Gun()
-
+let items = gun.get('items')
 // let authUrl = "https://todoist.com/oauth/authorize";
 // let clientId = "?client_id=b27b589d42044a5ca44bffe94ffb1cfb";
 // let scope = "&scope=data:read";

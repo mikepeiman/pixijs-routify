@@ -1,7 +1,6 @@
 <script>
   import { url } from "@sveltech/routify";
   import { onMount } from "svelte";
-  import axios from "axios";
   export let data;
 
   let projectList = [],
@@ -40,7 +39,7 @@
   {#each projectList as item}
     <a href={$url('../:id', { id: item.id })} class="item">
       {#each Object.entries(item) as [name, value]}
-        {#if name === 'name' || name === 'id'}
+        {#if name === 'name' || name === 'id' || name === 'content' || name === 'created'}
           <div>
             <b>{name}:</b>
             {value}

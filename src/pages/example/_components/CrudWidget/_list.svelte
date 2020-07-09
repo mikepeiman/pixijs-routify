@@ -1,28 +1,30 @@
 <script>
   import { url } from "@sveltech/routify";
+  import { onMount } from "svelte";
   import axios from "axios";
   export let data;
 
-  let projectList = [];
+  let projectList = [],
+    taskList = [];
 
-  data.then(res => {
-    let data = res.data;
-    data.forEach(item => {
-      let newObj = {};
-      // console.log(`<<<<<<<<<<<<<<<< ${item.name} >>>>>>>>>>>>>>>>>`);
-      for (let [key, val] of Object.entries(item)) {
-        newObj[key] = val;
-      }
-      projectList = [...projectList, newObj];
+  onMount(() => {
+    data.then(res => {
+      let projects = res.data;
+      projects.forEach(item => {
+        let newObj = {};
+        // console.log(`<<<<<<<<<<<<<<<< ${item.name} >>>>>>>>>>>>>>>>>`);
+        for (let [key, val] of Object.entries(item)) {
+          newObj[key] = val;
+        }
+        projectList = [...projectList, newObj];
+      });
+      console.log(
+        `#################################################################### _list.svelte: `,
+        projectList
+      );
+      return projectList;
     });
-    console.log(
-      `#################################################################### _list.svelte: `,
-      projectList
-    );
-    return projectList;
   });
-
-  console.log(`type of data ${typeof data}, projectList ${typeof projectList}`);
 </script>
 
 <style>
@@ -34,7 +36,7 @@
 </style>
 
 <div class="items">
-  <!-- {#await projectList} -->
+
   {#each projectList as item}
     <a href={$url('../:id', { id: item.id })} class="item">
       {#each Object.entries(item) as [name, value]}
@@ -47,5 +49,5 @@
       {/each}
     </a>
   {/each}
-  <!-- {/await} -->
+
 </div>

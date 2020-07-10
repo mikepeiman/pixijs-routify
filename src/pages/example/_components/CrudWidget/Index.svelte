@@ -3,7 +3,7 @@
   import list from "./_list.svelte";
   import update from "./_update.svelte";
   import view from "./_view.svelte";
-  export let data, name;
+  export let data, name, projects, tasks;
   const components = { list, update, view };
 
   $: [id, action = "view"] = $leftover.split("/");
@@ -13,6 +13,6 @@
 <div>
   <div style="width: 512px; margin: auto;" class="card shadow">
     <h1 style="text-align: center; margin-top: -8px">{name}</h1>
-    <svelte:component this={component} {data} {id} />
+    <svelte:component this={component} {data} {projects} {tasks} {id} />
   </div>
 </div>

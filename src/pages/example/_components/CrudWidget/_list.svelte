@@ -1,18 +1,21 @@
 <script>
   import { url } from "@sveltech/routify";
   import { onMount } from "svelte";
-  export let data;
+  export let data, projects, tasks;
 
   let projectList = [],
-    taskList = [];
+    taskList = [],
+    newTaskList = [];
 
   onMount(() => {
-    data.then(res => {
+
+    
+    projects.then(res => {
       let projects = res.data;
-      projects.forEach(item => {
+      projects.forEach(project => {
         let newObj = {};
-        // console.log(`<<<<<<<<<<<<<<<< ${item.name} >>>>>>>>>>>>>>>>>`);
-        for (let [key, val] of Object.entries(item)) {
+        // console.log(`<<<<<<<<<<<<<<<< ${project.name} >>>>>>>>>>>>>>>>>`);
+        for (let [key, val] of Object.entries(project)) {
           newObj[key] = val;
         }
         projectList = [...projectList, newObj];
@@ -22,6 +25,22 @@
         projectList
       );
       return projectList;
+    });
+    tasks.then(res => {
+      let tasks = res.data;
+      tasks.forEach(project => {
+        let newObj = {};
+        // console.log(`<<<<<<<<<<<<<<<< ${project.name} >>>>>>>>>>>>>>>>>`);
+        for (let [key, val] of Object.entries(project)) {
+          newObj[key] = val;
+        }
+        taskList = [...taskList, newObj];
+      });
+      console.log(
+        `#################################################################### _list.svelte: `,
+        taskList
+      );
+      return taskList;
     });
   });
 </script>
@@ -45,6 +64,10 @@
             {value}
           </div>
         {/if}
+        {newTaskList = taskList.filter(task => task.project_id == item.id)}
+        {#each taskList.filter(task => task.project_id == item.id) as task}
+        {task.created}<br>
+        {/each}
       {/each}
     </a>
   {/each}

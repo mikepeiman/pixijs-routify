@@ -2,11 +2,13 @@
   import { leftover } from "@sveltech/routify";
   import list from "./_list.svelte";
   import update from "./_update.svelte";
-  import view from "./_view.svelte";
+  import task_view from "./_task_view.svelte";
+    import view from "./_view.svelte";
   export let data, name, projects, tasks;
-  const components = { list, update, view };
+  const components = { list, update, view, task_view };
 
   $: [id, action = "view"] = $leftover.split("/");
+    $: [id, action = "task_view"] = $leftover.split("/tasks/");
   $: component = (id && components[action]) || list;
 </script>
 

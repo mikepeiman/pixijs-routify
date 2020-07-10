@@ -1,7 +1,7 @@
 <script>
   import { url } from "@sveltech/routify";
   import { onMount } from "svelte";
-  export let projects, tasks;
+  export let projectsPromise, tasksPromise;
 
   let projectList = [],
     taskList = [],
@@ -27,7 +27,7 @@
     return list.filter(task => task.project_id == pid);
   }
   onMount(async () => {
-    await tasks.then(res => {
+    await tasksPromise.then(res => {
       let tasks = res.data;
       tasks.forEach(project => {
         let newObj = {};
@@ -45,7 +45,7 @@
       console.log(filterByProject(taskList, "377557134"));
       return taskList;
     });
-    projects.then(res => {
+    projectsPromise.then(res => {
       let projects = res.data;
       projects.forEach(project => {
         let newObj = {};

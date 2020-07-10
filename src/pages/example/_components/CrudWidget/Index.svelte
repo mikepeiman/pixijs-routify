@@ -15,6 +15,6 @@
 <div>
   <div style="width: 512px; margin: auto;" class="card shadow">
     <h1 style="text-align: center; margin-top: -8px">{name}</h1>
-    <svelte:component this={component} {data} {projects} {tasks} {id} />
+    <svelte:component this={component} {data} projectsPromise={projects} tasksPromise={tasks} {id} {name} />
   </div>
 </div>

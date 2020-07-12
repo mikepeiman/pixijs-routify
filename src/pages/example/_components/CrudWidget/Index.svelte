@@ -4,32 +4,43 @@
   import list from "./_list.svelte";
   import update from "./_update.svelte";
   import task_view from "./_task_view.svelte";
-  import project_task_list from "./_project_task_list.svelte";
+  import list_tasks from "./_project_task_list.svelte";
   import view from "./_view.svelte";
   export let data, name, projects, tasks;
-  let id, action
-  const components = { list, update, view, task_view, project_task_list };
+  let id, action, component, arr;
+  const components = { list, update, view, task_view, 
+  list_tasks };
   // $: console.log(`>>> leftover.split length is ${$leftover.split("/").length}`, $leftover.split("/"));
 
-  $: arr = $leftover.split("/")
-    $: console.log(`>>> leftover.split includes tasks: ${arr.includes("tasks")}, arr=${arr}, typeof=${typeof arr}`);
+  // $: arr = $leftover.split("/")
+  // $: {
+  //   if(arr.length > 1) {
+  //     if(arr.includes("tasks")) { component = [id, action = "project_task_list"] }
+  //     else if(arr.includes("task")) { component = [arr[1], action = "task_view"] }
+  //     else { [id, action = "view"] = $leftover.split("/")}
+  //   }
+  // }
   $: {
-    // arr = $leftover.split("/")
-    if(arr.includes("tasks")){
-      [id, action = "project_task_list"]
-    } else if(arr.includes("task")){
-          // id = arr[1]
-          // console.log(`leftover array ${arr}, arr[1]=${arr[1]} id=${id}`)
-          
-      [id, action = "task_view"] 
+    arr = $leftover.split("/");
+    console.log(`reactive leftovers arr ${arr}`)
+    if (arr.includes("tasks")) {
+      id = arr[0]
+      action = "list_tasks"
+      // [id, action = "list_tasks"] = arr;
+      console.log(`we hit the tasks list route with id ${id} and action ${action}`)
+      action = action
+      components = components
+    } else if (arr.includes("task") && !arr.includes("update")) {
+      (id = arr[1]), (action = "task_view");
+      console.log(`we hit the task view route with id ${id} and action ${action}`)
+    } else if (arr.includes("task") && arr.includes("update")) {
+      (id = arr[1]), (action = "update");
+      console.log(`we hit the task update route with id ${id} and action ${action}`)
     } else {
-      component = list
+      [id, action = "view"] = arr;
+      console.log(`we hit the default view route with id ${id} and action ${action}`)
     }
   }
-  // $: [id, action = "project_task_list"] = $leftover.split("/");
-  $: [id, action = "view"] = $leftover.split("/");
-  console.log(`[id, action = "view"] = $leftover.split("/") ${[id, action = "view"] = $leftover.split("/")}`)
-  // $: [id, action = "task_view"] = $leftover.split("/task/");
 
   $: component = (id && components[action]) || list;
 </script>

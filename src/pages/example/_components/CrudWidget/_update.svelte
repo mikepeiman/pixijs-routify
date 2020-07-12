@@ -3,8 +3,10 @@
   export let data, id;
   let item, itemDetails = []
   // $: item
+  console.log(`update.svelte: id ${id}, data `, data)
   data.then(res => {
     let data = res.data
+      console.log(`update.svelte inside promise: id ${id}, data `, data)
      item = data.filter(item => item.id == id)[0];
      console.log('item   :   ', item)
      itemDetails = Object.entries(item)

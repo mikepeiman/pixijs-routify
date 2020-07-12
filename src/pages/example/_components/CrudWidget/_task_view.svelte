@@ -4,9 +4,7 @@
     id;
   let item, itemDetails;
   $: itemDetails = [];
-
-  console.log(`_task_view: id ${id}, url leftover ${$leftover}`);
-
+  $: id = $leftover.split("/")[1]
   tasksPromise.then(res => {
     let data = res.data;
     console.log(data);
@@ -27,7 +25,7 @@
 </script>
 
 <div>
-<h1>TASK VIEW!</h1>
+<h1>TASK VIEW! ID#{id}</h1>
   <div>
     {#each itemDetails as item}
       <div>
@@ -37,6 +35,6 @@
     {/each}
     <br />
     <a href={$url('../', { id })}>[Back]</a>
-    <a href={$url('../:id/update', { id })}>[Update]</a>
+    <a href={$url('../task/:id/update', { id })}>[Update]</a>
   </div>
 </div>

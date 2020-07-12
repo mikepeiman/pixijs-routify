@@ -37,12 +37,10 @@
         }
         taskList = [...taskList, newObj];
       });
-      console.log(
-        `#################################################################### _list.svelte: `,
-        taskList
-      );
-      console.log("filtered: ");
-      console.log(filterByProject(taskList, "377557134"));
+      // console.log(
+      //   `#################################################################### _list.svelte: `,
+      //   taskList
+      // );
       return taskList;
     });
     projectsPromise.then(res => {
@@ -56,10 +54,10 @@
         }
         projectList = [...projectList, newObj];
       });
-      console.log(
-        `#################################################################### _list.svelte: `,
-        projectList
-      );
+      // console.log(
+      //   `#################################################################### _list.svelte: `,
+      //   projectList
+      // );
       return projectList;
     });
   });
@@ -91,7 +89,7 @@
 
     {#each project.tasks.slice(0, 3) as task, i (task.id)}
       <a
-        href={$url('../:pid/tasks/:tid', { pid: project.id, tid: task.id })}
+        href={$url('../task/:tid', { tid: task.id })}
         class="task">
         {task.created.slice(0, 10)}: {task.content.slice(0, 50)}...
       </a>

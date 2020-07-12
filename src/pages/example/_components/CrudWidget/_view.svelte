@@ -1,12 +1,11 @@
 <script>
   import { url } from "@sveltech/routify";
-  export let data = [],
+  export let projectsPromise = [],
     id;
   let item, itemDetails;
   $: itemDetails = [];
-  console.log("_list");
-  console.log(data);
-  data.then(res => {
+
+  projectsPromise.then(res => {
     console.log(res);
     item = res.data.filter(item => item.id == id)[0];
     console.log(`item now: `);

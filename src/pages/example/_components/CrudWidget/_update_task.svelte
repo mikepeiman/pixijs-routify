@@ -1,10 +1,10 @@
 <script>
   import { url } from "@sveltech/routify";
-  export let projectsPromise, id;
+  export let tasksPromise, id;
   let item, itemDetails = []
 
-  console.log(`_update.svelte: id ${id}`)
-  projectsPromise.then(res => {
+  console.log(`_update_task.svelte: id ${id}`)
+  tasksPromise.then(res => {
     let data = res.data
       console.log(`update.svelte inside promise: id ${id}, data `, data)
      item = data.filter(item => item.id == id)[0];
@@ -15,7 +15,7 @@
 </script>
 
 <div >
-<h2>Update Project</h2>
+<h2>Update Task</h2>
   <div >
     {#each itemDetails as [name, value]}
       <div>
@@ -25,5 +25,5 @@
     {/each}
   </div>
   <br>
-  <a href="{$url('../:id', {id})}">Back</a>
+  <a href="{$url('../task/:id', {id})}">Back</a>
 </div>

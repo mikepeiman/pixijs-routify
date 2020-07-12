@@ -48,5 +48,5 @@
   <p>This allows for reusable navigatable components.</p>
 </div>
 
-<CrudWidget data={projects} {projects} {tasks} name="Projects" />
+<CrudWidget {projects} {tasks} />
 <!-- <CrudWidget data={tasks} name="Tasks" /> -->

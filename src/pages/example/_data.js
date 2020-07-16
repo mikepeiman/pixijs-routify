@@ -56,6 +56,7 @@ function getProjects() {
       `#################################################################### new projects list: `,
       projectList
     );
+    gun.get('test').put({name: "This is Mike's test"})
     return projectList;
   });
 }

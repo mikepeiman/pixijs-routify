@@ -1,5 +1,7 @@
 <script>
   import { url } from "@sveltech/routify";
+  import {onMount} from 'svelte'
+  let gun = Gun()
   export let projectsPromise = [],
     id;
   let item, itemDetails;
@@ -19,6 +21,17 @@
 
     console.log(`itemDetails.length ${itemDetails.length}: `, itemDetails);
   });
+  gun.get('test').on(function(data, key) {
+  console.log(`GUNDB *******************   view onMount, gun.get('test').on(())`)
+  console.log(`key ${key}, data ${data.name}`)
+  console.log(key, data)
+onMount(() => {
+
+  })
+  // console.log(`*******************   view onMount, gun.get('test'): ${test.text}`)
+  // console.log(test)
+})
+
   // console.log(`itemDetails.length ${itemDetails.length}: `, itemDetails);
   // $: item = data.filter(item => item.id == id)[0];
 </script>

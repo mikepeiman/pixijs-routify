@@ -16,26 +16,6 @@
     return projectList;
   });
 
-  // tasks.then(res => {
-  //   // console.log(`test promise ${res.data}`);
-  //   let data = res.data;
-  //   data.forEach(item => {
-  //     let newObj = {};
-  //     // console.log(`<<<<<<<<<<<<<<<< ${item.name} >>>>>>>>>>>>>>>>>`);
-  //     for (let [key, val] of Object.entries(item)) {
-  //       newObj[key] = val;
-  //       // console.log(`item key ${key}: value: ${val}`);
-  //     }
-  //     // console.log(`logging above newObj`)
-  //     // console.dir(newObj)
-  //     taskList = [...taskList, newObj];
-  //   });
-  //   console.log(
-  //     `#################################################################### new tasks list: `,
-  //     taskList
-  //   );
-  //   return taskList;
-  // });
 </script>
 
 <div style="text-align: center">

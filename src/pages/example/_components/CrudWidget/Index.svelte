@@ -42,27 +42,37 @@
   }
 
   $: component = (id && components[action]) || list;
-  $: name = ""
+  $: name = "";
 
-  onMount(() => {
-
-  });
+  onMount(() => {});
 
   function testGun() {
     console.log(`testGun`);
     gun.get("test").on(function(data, key) {
-        let rand = Math.random().toString();
-  console.log(`name: ${name}, rand `, rand);
+      let rand = Math.random().toString();
+      console.log(`name: ${name}, rand `, rand);
       console.log(`testGun within .on: `, data.name);
       console.log(`name: ${name}, rand `, rand);
     });
+
+    gun.get('todoist-projects').on(function(data, key) {
+      console.log(`gun.get('todoist-projects') key: ${key}, data: ${data}`, data)
+    })
+gun.get('todoist-projects').map().on(function(data, key) {
+      console.log(`gun.get('todoist-projects') key: ${key}, data: ${data}`, data)
+    })
+
+    
+
+        gun.get('todoist-projects').get('all').on(function(data, key) {
+      console.log(`gun.get('todoist-projects').get('all') key: ${key}, data: ${data}`, data)
+    })
   }
 
   function logChange() {
-    
-  gun.get("test").put({ name: name });
+    gun.get("test").put({ name: name });
 
-    console.log(`New name value: ${name}`)
+    console.log(`New name value: ${name}`);
   }
 </script>
 

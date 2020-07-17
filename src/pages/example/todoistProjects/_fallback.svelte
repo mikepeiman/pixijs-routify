@@ -7,6 +7,7 @@
   projects.then(res => {
     let data = res.data;
     data.forEach(item => {
+      // console.log(`_fallback.js: getProjects() each item: `, item);
       let newObj = {};
       for (let [key, val] of Object.entries(item)) {
         newObj[key] = val;
@@ -15,7 +16,6 @@
     });
     return projectList;
   });
-
 </script>
 
 <div style="text-align: center">

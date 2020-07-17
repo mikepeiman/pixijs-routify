@@ -27,37 +27,29 @@
     return list.filter(task => task.project_id == pid);
   }
   onMount(async () => {
+
     await tasksPromise.then(res => {
       let tasks = res.data;
       tasks.forEach(project => {
         let newObj = {};
-        // console.log(`<<<<<<<<<<<<<<<< ${project.name} >>>>>>>>>>>>>>>>>`);
         for (let [key, val] of Object.entries(project)) {
           newObj[key] = val;
         }
         taskList = [...taskList, newObj];
       });
-      // console.log(
-      //   `#################################################################### _list.svelte: `,
-      //   taskList
-      // );
       return taskList;
     });
+
     projectsPromise.then(res => {
       let projects = res.data;
       projects.forEach(project => {
         let newObj = {};
-        // console.log(`<<<<<<<<<<<<<<<< ${project.name} >>>>>>>>>>>>>>>>>`);
         for (let [key, val] of Object.entries(project)) {
           newObj[key] = val;
           newObj.tasks = filterByProject(taskList, project.id);
         }
         projectList = [...projectList, newObj];
       });
-      // console.log(
-      //   `#################################################################### _list.svelte: `,
-      //   projectList
-      // );
       return projectList;
     });
   });

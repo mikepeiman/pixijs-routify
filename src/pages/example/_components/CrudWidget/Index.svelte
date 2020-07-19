@@ -47,6 +47,7 @@
   onMount(() => {});
 
   function testGun() {
+    gun.get("test").set(null)
     console.log(`testGun`);
     gun.get("test").on(function(data, key) {
       let rand = Math.random().toString();
@@ -55,18 +56,13 @@
       console.log(`name: ${name}, rand `, rand);
     });
 
-    gun.get('todoist-projects').on(function(data, key) {
-      console.log(`gun.get('todoist-projects') key: ${key}, data: ${data}`, data)
-    })
-gun.get('todoist-projects').map().on(function(data, key) {
-      console.log(`gun.get('todoist-projects') key: ${key}, data: ${data}`, data)
-    })
+    gun
+      .get("todoist-projects")
+      .map()
+      .on(function(data, key) {
+        console.log(`gun key: ${key}, data: `, data);
+      });
 
-    
-
-        gun.get('todoist-projects').get('all').on(function(data, key) {
-      console.log(`gun.get('todoist-projects').get('all') key: ${key}, data: ${data}`, data)
-    })
   }
 
   function logChange() {

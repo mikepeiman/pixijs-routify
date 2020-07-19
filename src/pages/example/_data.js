@@ -42,24 +42,22 @@ function getProject(pid) {
 
 projectList = [];
 getProjects()
+// let projects = gun.get('todoist-projects')
+gun.get('todoist-projects').put(null)
 function getProjects() {
+  let tp = gun.get('todoist-projects')
   todoistProjects.then((res) => {
     let data = res.data;
-    gun.get('todoist-projects').put({'all': data})
+    tp.put(null)
     data.forEach((item) => {
-      
       let newObj = {};
       for (let [key, val] of Object.entries(item)) {
         newObj[key] = val;
-        // gun.get('todoist-projects').put(newObj)
-        gun.get('todoist-projects').get(item.id).put({project: item})
+        gun.get('todoist-projects').get(key).set(null)
+        tp.get(key).put(null)
       }
-      // gun.get('todoist-projects').put({`${item.id}`: item.name})
       projectList = [...projectList, newObj];
-      console.log(`_data.js: getProjects() each item: `, item)
     });
-
-    // gun.get('test').put({name: "This is Mike's test"})
     return projectList;
   });
 }
